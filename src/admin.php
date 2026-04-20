@@ -1,5 +1,7 @@
 <?php
 
+require_once YG_PLUGIN_PATH . '/services/apiService.php';
+
 /**
  * Agregar el menú a la sidebar de WP
  */
@@ -48,7 +50,7 @@ function yg_render_admin_page()
         </form>
     </div>
     <div class="wrap">
-        <b>Es necesario tener una cuenta activa en YGLU (<a href="tuyglu.com/alta">Date de alta</a>)</b>
+        <b>Es necesario tener una cuenta activa en YGLU (<a href="https://tuyglu.com/alta">Date de alta</a>)</b>
     </div>
 <?php
 }
@@ -72,7 +74,7 @@ function yg_settings_fields() // Agregar campos a la página de ajustes
             'type' => 'text',
             'placeholder' => 'Clave API de tu cuenta de YGLU',
             'value' => get_option('yg_api_key'),
-            'helper' => 'Es necesario tener una cuenta activa en YGLU (<a href="tuyglu.com/alta">Date de alta</a>). Dentro de la cuenta podrás generar la Clave API (Configuración > API)'
+            'helper' => 'Podrás generar la Clave API dentro de YGLU, en Configuración > API'
         ]
     );
 }

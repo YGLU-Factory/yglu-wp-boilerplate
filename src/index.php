@@ -8,12 +8,9 @@
 * Author URI: https://tuyglu.com/
 **/
 
-require_once YG_PLUGIN_PATH . "helpers/environment.php";
-
 define("YG_PLUGIN_PATH", plugin_dir_path(__FILE__));
 define("YG_PLUGIN_URL", plugin_dir_url(__FILE__));
 define("YG_PLUGIN_SLUG", "yglu");
-define("YG_API_BASE_URL", getenv('API_BASE_URL') ?: 'https://app.tuyglu.com/api/rest');
 
 require_once YG_PLUGIN_PATH . "admin.php";
 
