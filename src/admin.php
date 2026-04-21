@@ -1,6 +1,6 @@
 <?php
 
-require_once YG_PLUGIN_PATH . '/services/apiService.php';
+require_once YGWP_PLUGIN_PATH . '/services/apiService.php';
 
 /**
  * Agregar el menú a la sidebar de WP
@@ -9,12 +9,12 @@ add_action("admin_menu", "yg_add_menu");
 function yg_add_menu()
 {
     add_menu_page(
-        "YGLU", // Título de la página
-        "YGLU", // Título del side menu
-        "manage_yglu", // Permiso
-        YG_PLUGIN_SLUG, // Link (slug) del side menu
-        "yg_render_admin_page", // Función que devolverá contenido a renderizar en la página
-        file_get_contents(YG_PLUGIN_PATH . '/assets/logo.b64'), // Icono del side menu
+        "YGLU Wordpress", // Título de la página
+        "YGLU API", // Título del side menu
+        "manage_yglu_ecommerce", // Permiso
+        YGWP_PLUGIN_SLUG, // Link (slug) del side menu
+        "ygwp_render_admin_page", // Función que devolverá contenido a renderizar en la página
+        file_get_contents(YGWP_PLUGIN_PATH . '/assets/logo.b64'), // Icono del side menu
         6 // Posición en el side menu
     );
 }
@@ -22,59 +22,56 @@ function yg_add_menu()
 /**
  * Agregar un permiso para los roles de administrador y editor de forma que puedan acceder a los ajustes
  */
-add_action("admin_init", "yg_add_capability");
-function yg_add_capability()
+add_action("admin_init", "ygwp_add_capability");
+function ygwp_add_capability()
 {
     $roles = array("administrator", "editor");
 
     foreach ($roles as $role) {
         $role = get_role($role);
-        $role->add_cap("manage_yglu");
+        $role->add_cap("manage_yglu_ecommerce");
     }
 }
 
 /**
  *
  */
-function yg_render_admin_page()
+function ygwp_render_admin_page()
 {
 ?>
     <div class="wrap">
-        <h1>YGLU Settings</h1>
+        <h1>YGLU Wordpress Settings</h1>
         <form method="post" action="options.php">
             <?php
-            settings_fields('yg_settings'); // Crear el grupo de ajustes para YGLU
-            do_settings_sections(YG_PLUGIN_SLUG); // Renderiza todas las secciones que se hayan agregado a la página del slug del plugin
+            settings_fields('ygwp_settings'); // Crear el grupo de ajustes para YGLU Wordpress
+            do_settings_sections(YGWP_PLUGIN_SLUG); // Renderiza todas las secciones que se hayan agregado a la página del slug del plugin
             submit_button();
             ?>
         </form>
     </div>
-    <div class="wrap">
-        <b>Es necesario tener una cuenta activa en YGLU (<a href="https://tuyglu.com/alta">Date de alta</a>)</b>
-    </div>
 <?php
 }
 
-add_action('admin_init',  'yg_settings_fields');
-function yg_settings_fields() // Agregar campos a la página de ajustes
+add_action('admin_init',  'ygwp_settings_fields');
+function ygwp_settings_fields() // Agregar campos a la página de ajustes
 {
-    add_settings_section('yg_settings_integration', 'Integración', '', YG_PLUGIN_SLUG); // Agrega una sección de ajustes
+    add_settings_section('ygwp_settings_integration', 'Integración', '', YGWP_PLUGIN_SLUG); // Agrega una sección de ajustes
 
-    register_setting('yg_settings', 'yg_api_key'); // Registra un ajuste, para crear su espacio en DB
+    register_setting('ygwp_settings', 'ygwp_api_key'); // Registra un ajuste, para crear su espacio en DB
     add_settings_field( // Campo de la clave API
-        'api_key',
+        'ygwp_api_key',
         'Clave API',
-        'yg_field_input',
-        YG_PLUGIN_SLUG,
-        'yg_settings_integration',
+        'ygwp_field_input',
+        YGWP_PLUGIN_SLUG,
+        'ygwp_settings_integration',
         [
-            'id' => 'yg_api_key',
+            'id' => 'ygwp_api_key',
             'classes' => ['regular-text'],
-            'name' => 'yg_api_key',
+            'name' => 'ygwp_api_key',
             'type' => 'text',
             'placeholder' => 'Clave API de tu cuenta de YGLU',
-            'value' => get_option('yg_api_key'),
-            'helper' => 'Podrás generar la Clave API dentro de YGLU, en Configuración > API'
+            'value' => get_option('ygwp_api_key'),
+            'helper' => 'Es necesario tener una cuenta activa en YGLU (tuyglu.com/alta). Dentro de la cuenta podrás generar la Clave API (Configuración > API)'
         ]
     );
 }
@@ -82,7 +79,7 @@ function yg_settings_fields() // Agregar campos a la página de ajustes
 /**
  * Devuelve un campo `input` estándar
  */
-function yg_field_input($args)
+function ygwp_field_input($args)
 {
     if (!isset($args['name']) || empty($args['name'])) return;
 
@@ -98,7 +95,7 @@ function yg_field_input($args)
     ]);
 ?>
 
-    <div class="yg_settings" id="<?php echo esc_attr($args['id']); ?>">
+    <div class="ygwp_settings" id="<?php echo esc_attr($args['id']); ?>">
         <?php if (!empty($args['label'])): ?>
             <label for="<?php echo esc_attr($args['name']); ?>"><?php echo esc_html($args['label']); ?></label><br>
         <?php endif; ?>
@@ -120,7 +117,7 @@ function yg_field_input($args)
 /**
  * Devuelve un set de radiobuttons
  */
-function yg_field_radio($args)
+function ygwp_field_radio($args)
 {
     if (!isset($args['name']) || empty($args['name'])) return;
 
@@ -163,7 +160,7 @@ function yg_field_radio($args)
 /**
  * Devuelve un set de radiobuttons con opción de que lleven un campo de texto asociado
  */
-function yg_field_radio_with_input($args)
+function ygwp_field_radio_with_input($args)
 {
     if (!isset($args['name']) || empty($args['name'])) return;
 
@@ -194,14 +191,14 @@ function yg_field_radio_with_input($args)
                     id="<?php echo $field_id; ?>"
                     value="<?php echo esc_attr($option['value']); ?>"
                     <?php checked($is_checked); ?>
-                    class="yg-radio-toggle"
+                    class="ygwp-radio-toggle"
                     data-target="<?php echo isset($option['show_input']) ? esc_attr($args['input_name'] . '_container') : ''; ?>" />
                 <span><?php echo esc_html($option['title']); ?></span>
             </label><br>
 
             <?php if (isset($option['show_input']) && $option['show_input']): ?>
                 <div id="<?php echo esc_attr($args['input_name'] . '_container'); ?>"
-                    class="yg-dependent-input"
+                    class="ygwp-dependent-input"
                     style="margin-left: 20px; margin-top: 5px; <?php echo !$is_checked ? 'display: none;' : ''; ?>">
                     <?php if (isset($option['input_label'])): ?>
                         <label for="<?php echo esc_attr($args['input_name']); ?>">
@@ -225,8 +222,8 @@ function yg_field_radio_with_input($args)
 
     <script>
         jQuery(document).ready(function($) {
-            $('.yg-radio-toggle').on('change', function() {
-                $('.yg-dependent-input').hide();
+            $('.ygwp-radio-toggle').on('change', function() {
+                $('.ygwp-dependent-input').hide();
 
                 // Mostrar el campo input para el nombre del campo de NIF existente
                 var targetId = $(this).data('target');
