@@ -1,7 +1,5 @@
 <?php
 
-require_once YGWP_PLUGIN_PATH . '/services/apiService.php';
-
 /**
  * Agregar el menú a la sidebar de WP
  */
